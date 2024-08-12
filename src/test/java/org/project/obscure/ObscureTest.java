@@ -1,5 +1,6 @@
 package org.project.obscure;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,7 +25,9 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method creates an instance of Obscure with the provided object.")
+    @ParameterizedTest(name = "The object {0} to be stored in the Obscure instance. " +
+            "An Obscure {1} instance containing the provided object.")
     @MethodSource("ofProviderArguments")
     void of(Object object, Object expected) {
         Obscure<?> actual = Obscure.of(object);
@@ -32,6 +35,7 @@ class ObscureTest {
         assertEquals(expected, actual.get());
     }
 
+    @DisplayName("This method creates an empty instance of Obscure.")
     @Test
     void empty() {
         Obscure<?> actual = Obscure.empty();
@@ -50,7 +54,8 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method retrieves the object stored in the Obscure instance.")
+    @ParameterizedTest(name = "The object {0} to be retrieved. The expected {1} object to be retrieved.")
     @MethodSource("getProviderArguments")
     void get(Object object, Object expected) {
         Obscure<?> actual = new Obscure<>(object);
@@ -69,7 +74,8 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method checks if the object stored in the Obscure instance is not null.")
+    @ParameterizedTest(name = "The object {0} to be checked. The expected {1} object to be retrieved.")
     @MethodSource("isPresentProviderArguments")
     void isPresent(Object object, boolean expected) {
         Obscure<?> obscure = new Obscure<>(object);
@@ -90,7 +96,9 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method checks if the object stored in the Obscure instance is null.")
+    @ParameterizedTest(name = "The object {0} to be checked. " +
+            "The expected {1} boolean value indicating whether the object is null or not")
     @MethodSource("isEmptyProviderArguments")
     void isEmpty(Object object, boolean expected) {
         Obscure<?> obscure = new Obscure<>(object);
@@ -111,7 +119,11 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method returns the value of the object stored in the Obscure instance, " +
+            "or the specified default value if the object is null.")
+    @ParameterizedTest(name = "The object {0} stored in the Obscure instance. " +
+            "The default value {1} to be returned if the object is null. " +
+            "The value of the object {2}  stored in the Obscure instance, or the specified default value.")
     @MethodSource("orElseProviderArguments")
     void orElse(Object object, Object defaultObject, Object expected) {
         Obscure<Object> obscure = new Obscure<>(object);
@@ -127,7 +139,8 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method throws the specified exception if the object stored in the Obscure instance is null.")
+    @ParameterizedTest(name = "The exception to be thrown if the object is {0}.")
     @MethodSource("orElseThrowNullProviderArguments")
     void orElseThrowNull(Object object) {
         Obscure<Object> obscure = new Obscure<>(object);
@@ -146,7 +159,10 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method returns the value of the object stored in the Obscure instance, " +
+            "or throws the specified exception if the object is null.")
+    @ParameterizedTest(name = "The object {0} stored in the Obscure instance. " +
+            "The expected {1} value to be returned if the object is not null.")
     @MethodSource("orElseThrowProviderArguments")
     void orElseThrow(Object object, Object expected) throws Exception {
         Obscure<Object> obscure = new Obscure<>(object);
@@ -166,7 +182,9 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method tests the equality of two Obscure instances.")
+    @ParameterizedTest(name = "The first Obscure {0} instance to compare. " +
+            "The second Obscure {1} instance to compare. The expected {2} boolean result of the equality check.")
     @MethodSource("equalsProviderArguments")
     void testEquals(Obscure<String> obscure1, Obscure<String> obscure2, boolean expected) {
         assertEquals(expected, obscure1.equals(obscure2));
@@ -181,7 +199,9 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method tests the equality of two Obscure instances by comparing their hash codes.")
+    @ParameterizedTest(name = "The first Obscure {0} instance to compare. The second Obscure {1} instance to compare. " +
+            "The expected {2} boolean result of the equality check.")
     @MethodSource("hashCodeProviderArguments")
     void testHashCode(Obscure<String> obscure1, Obscure<String> obscure2, boolean expected) {
         assertEquals(expected, obscure1.hashCode() == obscure2.hashCode());
@@ -194,7 +214,9 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("This method retrieves the object stored in the Obscure instance.")
+    @ParameterizedTest(name = "An instance of Obscure {0} containing the object to be retrieved. " +
+            "The expected {1} object to be retrieved.")
     @MethodSource("getObjectProviderArguments")
     void getObject(Obscure<String> actual, String expected) {
         assertEquals(expected, actual.get());
@@ -206,7 +228,9 @@ class ObscureTest {
         );
     }
 
-    @ParameterizedTest
+    @DisplayName("Sets a new value for the object stored in the Obscure instance.")
+    @ParameterizedTest(name = "The new value {0} to be stored in the Obscure instance. " +
+            "The updated Obscure {1} instance with the new value.")
     @MethodSource("setObjectProviderArguments")
     void setObject(String newValue, String expected) {
         Obscure<String> actual = Obscure.of(newValue);
