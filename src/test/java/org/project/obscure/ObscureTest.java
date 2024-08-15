@@ -284,8 +284,10 @@ class ObscureTest {
               + "The updated Obscure {1} instance with the new value.")
   @MethodSource("setObjectProviderArguments")
   void setObject(String newValue, String expected) {
-    Obscure<String> actual = Obscure.of(newValue);
+    Obscure<String> obscure = Obscure.of("!");
 
-    assertEquals(expected, actual.get());
+    obscure.setObject(newValue);
+
+    assertEquals(expected, obscure.get());
   }
 }
