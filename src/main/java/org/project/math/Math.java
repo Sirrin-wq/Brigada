@@ -1,5 +1,6 @@
 package org.project.math;
 
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -9,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> The type of numbers to be used in the mathematical operations. It must extend Number
  *     and Comparable.
  */
+@Data
 public abstract class Math<T extends Number & Comparable<T>> {
   /** A constant string indicating that the array mustn't be empty or contain only null values. */
   public static final String EMPTY_OR_CONTAIN_ONLY_NULL_VALUES =
