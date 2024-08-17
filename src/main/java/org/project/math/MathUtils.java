@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> The type of numbers in the array, which must extend Number and be Comparable.
  */
 public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
+  /** A Boolean field that indicates whether the array is sorted. */
   private boolean isSorted = false;
 
   /**
@@ -34,14 +35,17 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
    * returns the maximum value among them. If any of the numbers is null, an {@link
    * NoSuchElementException} will be thrown.
    *
-   * @param a The first number to compare.
-   * @param b The second number to compare.
-   * @param c The third number to compare.
-   * @return The maximum value among a, b, and c.
+   * @param firstNumber The first number to compare.
+   * @param secondNumber The second number to compare.
+   * @param thirdNumber The third number to compare.
+   * @return The maximum value among firstNumber, secondNumber, and thirdNumber.
    * @throws NoSuchElementException If any of the numbers is null.
    */
-  public static <T extends Number & Comparable<T>> T maxOfThree(final T a, final T b, final T c) {
-    return Stream.of(a, b, c).max(Comparable::compareTo).orElseThrow();
+  public static <T extends Number & Comparable<T>> T maxOfThree(
+      final T firstNumber, final T secondNumber, final T thirdNumber) {
+    return Stream.of(firstNumber, secondNumber, thirdNumber)
+        .max(Comparable::compareTo)
+        .orElseThrow();
   }
 
   /**
@@ -51,17 +55,24 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
    * returns the minimum value among them. If any of the numbers is null, an {@link
    * NoSuchElementException} will be thrown.
    *
-   * @param a The first number to compare.
-   * @param b The second number to compare.
-   * @param c The third number to compare.
-   * @param d The fourth number to compare.
-   * @param e The fifth number to compare.
-   * @return The minimum value among a, b, c, d, and e.
+   * @param firstNumber The first number to compare.
+   * @param secondNumber The second number to compare.
+   * @param thirdNumber The third number to compare.
+   * @param fourthNumber The fourth number to compare.
+   * @param fifthNumber The fifth number to compare.
+   * @return The minimum value among firstNumber, secondNumber, thirdNumber, fourthNumber, and
+   *     fifthNumber.
    * @throws NoSuchElementException If any of the numbers is null.
    */
   public static <T extends Number & Comparable<T>> T minOfFive(
-      final T a, final T b, final T c, final T d, final T e) {
-    return Stream.of(a, b, c, d, e).min(Comparable::compareTo).orElseThrow();
+      final T firstNumber,
+      final T secondNumber,
+      final T thirdNumber,
+      final T fourthNumber,
+      final T fifthNumber) {
+    return Stream.of(firstNumber, secondNumber, thirdNumber, fourthNumber, fifthNumber)
+        .min(Comparable::compareTo)
+        .orElseThrow();
   }
 
   /**
@@ -132,6 +143,7 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
       T[] sortedArray = Arrays.copyOf(numbers, numbers.length);
 
       quickSortIterative(sortedArray, sortedArray.length - 1);
+
       isSorted = true;
 
       return sortedArray;
@@ -156,23 +168,23 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
   public int binarySearch(final T value) {
     sort();
 
-    int low = 0;
-    int high = numbers.length - 1;
+    int lowRange = 0;
+    int highRange = numbers.length - 1;
 
-    while (low <= high) {
-      int mid = low + (high - low) / 2;
-      T midVal = numbers[mid];
+    while (lowRange <= highRange) {
+      int midIndex = lowRange + (highRange - lowRange) / 2;
+
+      T midVal = numbers[midIndex];
       int cmp = midVal.compareTo(value);
 
       if (cmp == 0) {
-        return mid;
+        return midIndex;
       } else if (cmp > 0) {
-        high = mid - 1;
+        highRange = midIndex - 1;
       } else {
-        low = mid + 1;
+        lowRange = midIndex + 1;
       }
     }
-
     return -1;
   }
 
@@ -201,28 +213,28 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
    * Performs an iterative version of the quicksort algorithm on the given array.
    *
    * <p>This method uses a stack to perform the quicksort algorithm iteratively. It starts by
-   * pushing the initial range [0, high] onto the stack. Then, it repeatedly pops a range from the
-   * stack, partitions the array around a pivot element, and pushes the two resulting ranges onto
-   * the stack. The process continues until the stack is empty.
+   * pushing the initial range [0, highIndex] onto the stack. Then, it repeatedly pops a range from
+   * the stack, partitions the array around a pivot element, and pushes the two resulting ranges
+   * onto the stack. The process continues until the stack is empty.
    *
-   * @param array The array to be sorted.
-   * @param high The ending index of the range to be sorted.
+   * @param array The array to be sorted. It mustn't be null.
+   * @param highIndex The ending index of the range to be sorted. It must be a non-negative integer
+   *     and less than or equal to the length of the array minus one.
    */
-  private void quickSortIterative(final T[] array, int high) {
+  private void quickSortIterative(final T[] array, int highIndex) {
     Deque<int[]> stack = new ArrayDeque<>();
-
-    stack.push(new int[] {0, high});
+    stack.push(new int[] {0, highIndex});
 
     while (!stack.isEmpty()) {
       int[] range = stack.pop();
-      int low = range[0];
-      high = range[1];
+      int lowIndex = range[0];
+      highIndex = range[1];
 
-      if (low < high) {
-        int pi = partition(array, low, high);
+      if (lowIndex < highIndex) {
+        int pi = partition(array, lowIndex, highIndex);
 
-        stack.push(new int[] {low, pi - 1});
-        stack.push(new int[] {pi + 1, high});
+        stack.push(new int[] {lowIndex, pi - 1});
+        stack.push(new int[] {pi + 1, highIndex});
       }
     }
   }
@@ -236,18 +248,20 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
    * pivot element after partitioning.
    *
    * @param array The array to be partitioned.
-   * @param low The starting index of the range to be partitioned.
-   * @param high The ending index of the range to be partitioned.
+   * @param lowIndex The starting index of the range to be partitioned.
+   * @param highIndex The ending index of the range to be partitioned.
    * @return The index of the pivot element after partitioning.
    */
-  private int partition(final T @NotNull [] array, final int low, final int high) {
-    T pivot = array[high];
-    int i = low - 1;
+  private int partition(final T @NotNull [] array, final int lowIndex, final int highIndex) {
+    T pivot = array[highIndex];
 
-    for (int j = low; j < high; j++) {
+    // This variable will track the index of the last element that's less than or equal to the
+    // turning point.
+    int i = lowIndex - 1;
+
+    for (int j = lowIndex; j < highIndex; j++) {
       if (array[j].compareTo(pivot) <= 0) {
         i++;
-
         T temp = array[i];
         array[i] = array[j];
         array[j] = temp;
@@ -255,8 +269,8 @@ public class MathUtils<T extends Number & Comparable<T>> extends Math<T> {
     }
 
     T temp = array[i + 1];
-    array[i + 1] = array[high];
-    array[high] = temp;
+    array[i + 1] = array[highIndex];
+    array[highIndex] = temp;
 
     return i + 1;
   }

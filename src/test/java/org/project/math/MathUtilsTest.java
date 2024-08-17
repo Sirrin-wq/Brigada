@@ -24,6 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class MathUtilsTest {
   private static final String UNSUPPORTED_NUMBER_TYPE = "Unsupported number type ";
+
   private static final String INTEGER = "Integer";
   private static final String DOUBLE = "Double";
   private static final String FLOAT = "Float";
@@ -33,6 +34,14 @@ class MathUtilsTest {
   public static final String BIG_INTEGER = "BigInteger";
   public static final String BIG_DECIMAL = "BigDecimal";
 
+  /**
+   * Creates a new instance of MathUtils with the given array of numbers.
+   *
+   * @param numbers The array of numbers.
+   * @param type The class type of the numbers in the array.
+   * @return A new instance of MathUtils.
+   * @throws IllegalArgumentException If the given type isn't supported.
+   */
   private static @NotNull MathUtils<? extends Number> getMathUtils(
       Number @NotNull [] numbers, @NotNull Class<? extends Number> type) {
     return switch (type.getSimpleName()) {
@@ -514,7 +523,7 @@ class MathUtilsTest {
       name =
           "An array {0} of BigInteger numbers. An array {1} of BigDecimal numbers. "
               + "The expected maximum value {2} from the bigIntegers array. "
-              + "The expected minimum value {3} from the bigIntegers array."
+              + "The expected minimum value {3} from the bigIntegers array. "
               + "The expected maximum value {4} from the bigDecimals array. "
               + "The expected minimum value {5} from the bigDecimals array.")
   @MethodSource("provideBigIntegerAndBigDecimal")
